@@ -1,5 +1,5 @@
 {
-    "name": "onelogin/php-saml",
+    "name": "instipod/php-saml",
     "description": "PHP SAML Toolkit",
     "license": "MIT",
     "homepage": "https://github.com/SAML-Toolkits/php-saml",

@@ -1341,7 +1341,8 @@ class OneLogin_Saml2_Utils
      *
      * @throws Exception
      */
-    public static function addSign($xml, $key, $cert, $signAlgorithm = XMLSecurityKey::RSA_SHA1, $digestAlgorithm = XMLSecurityDSig::SHA1)
+     // https://github.com/SAML-Toolkits/php-saml/pull/439
+    public static function addSign($xml, $key, $cert, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $digestAlgorithm = XMLSecurityDSig::SHA256, $options = null)
     {
         if ($xml instanceof DOMDocument) {
             $dom = $xml;
@@ -1351,6 +1352,10 @@ class OneLogin_Saml2_Utils
             if (!$dom) {
                 throw new Exception('Error parsing xml string');
             }
+        }
+
+        if (is_null($options)) {
+            $options =  array('id_name' => 'ID');
         }
 
         /* Load the private key. */
@@ -1368,7 +1373,7 @@ class OneLogin_Saml2_Utils
             array($rootNode),
             $digestAlgorithm,
             array('http://www.w3.org/2000/09/xmldsig#enveloped-signature', XMLSecurityDSig::EXC_C14N),
-            array('id_name' => 'ID')
+            $options
         );
 
         $objXMLSecDSig->sign($objKey);

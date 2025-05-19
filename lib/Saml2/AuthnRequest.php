@@ -149,6 +149,17 @@ REQUESTEDAUTHN;
 </samlp:AuthnRequest>
 AUTHNREQUEST;
 
+        // https://github.com/SAML-Toolkits/php-saml/pull/439
+        if (isset($security['authnRequestsSigned']) && $security['authnRequestsSigned']) {
+            // add signature to the authnRequest to prevent rejection
+            try {
+                $options =  array('id_name' => 'ID', 'overwrite' => false);
+                $request = Utils::addSign($request, $spData['privateKey'], $spData['x509cert'], $security['signatureAlgorithm'], $security['digestAlgorithm'], $options);
+            } catch (\Exception $exception) {
+                throw new Error('Could not put signature in AuthnRequest Body, ' . $exception->getMessage());
+            }
+        }
+
         $this->_id = $id;
         $this->_authnRequest = $request;
     }

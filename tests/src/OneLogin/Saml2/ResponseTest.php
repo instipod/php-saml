@@ -1353,7 +1353,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Somtimes IdPs uses datetimes with miliseconds, this
+     * Sometimes IdPs uses datetimes with milliseconds, this
      * test is to verify that the toolkit supports them
      *
      * @covers OneLogin\Saml2\Response::isValid
@@ -1607,10 +1607,12 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $response = new Response($settings, $xml);
 
-        $this->assertFalse($response->isValid());
+        $this->assertFalse(@$response->isValid());
+
         $possibleErrors = [
           "openssl_x509_read(): supplied parameter cannot be coerced into an X509 certificate!",
-          "openssl_x509_read(): X.509 Certificate cannot be retrieved"
+          "openssl_x509_read(): X.509 Certificate cannot be retrieved",
+          "Unable to extract public key"
         ];
         $this->assertTrue(in_array($response->getError(), $possibleErrors));
     }
@@ -1822,5 +1824,18 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $xml = file_get_contents(TEST_ROOT . '/data/responses/signed_message_response.xml.base64');
         $response = new Response($settings, $xml);
         $this->assertTrue($response->isValid());
+    }
+
+    public function testCanGetEncryptedNameIdInEncryptedAssertion()
+    {
+        $xml = file_get_contents(TEST_ROOT . '/data/responses/response_encrypted_nameid_encrypted_assertion.xml.base64');
+        $response = new Response($this->_settings, $xml);
+        $this->assertTrue($response->isValid());
+        $this->assertSame('user@example.com', $response->getNameId());
+
+        $xml = file_get_contents(TEST_ROOT . '/data/responses/response_encrypted_nameid_encrypted_assertion2.xml.base64');
+        $response = new Response($this->_settings, $xml);
+        $this->assertTrue($response->isValid());
+        $this->assertSame('492882615acf31c8096b627245d76ae53036c090', $response->getNameId());
     }
 }

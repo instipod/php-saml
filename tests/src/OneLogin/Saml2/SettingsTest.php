@@ -271,7 +271,7 @@ class SettingsTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($responsesIsInvalid);
     }
 
-    public function invalidCompressSettingsProvider()
+    static public function invalidCompressSettingsProvider()
     {
         return array(
             array(1),
@@ -416,7 +416,7 @@ class SettingsTest extends \PHPUnit\Framework\TestCase
             $this->fail('Error was not raised');
         } catch (Error $e) {
             $this->assertStringContainsString('sp_signMetadata_invalid', $e->getMessage());
-            $this->assertStringContainsString('organization_not_enought_data', $e->getMessage());
+            $this->assertStringContainsString('organization_not_enough_data', $e->getMessage());
             $this->assertStringContainsString('contact_type_invalid', $e->getMessage());
         }
 
@@ -427,7 +427,7 @@ class SettingsTest extends \PHPUnit\Framework\TestCase
             $this->fail('Error was not raised');
         } catch (Error $e) {
             $this->assertStringContainsString('sp_signMetadata_invalid', $e->getMessage());
-            $this->assertStringContainsString('organization_not_enought_data', $e->getMessage());
+            $this->assertStringContainsString('organization_not_enough_data', $e->getMessage());
             $this->assertStringContainsString('contact_type_invalid', $e->getMessage());
         }
     }
@@ -539,7 +539,7 @@ class SettingsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectEncryptionKeyDescriptor ? 2 : 0, substr_count($metadata, '<md:KeyDescriptor use="encryption"'));
     }
 
-    public function getSPMetadataWithX509CertNewDataProvider()
+    static public function getSPMetadataWithX509CertNewDataProvider()
     {
         return [
             'settings do not require encryption' => [
